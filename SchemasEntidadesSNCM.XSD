@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid XML 2014 Starter Edition 12.2.7.5382 (http://www.liquid-technologies.com) -->
+<xs:schema version="1.0.0" xmlns:sncm="http://entidades.org.br/sncm_v1" targetNamespace="http://entidades.org.br/sncm_v1" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="ConsultaSNCM" type="sncm:Consulta" />
+    <xs:element name="ProcessoAdm" type="xs:string" />
+    <xs:element name="EnvelopeEventoSNCM">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="IdentificacaoEmissor" type="sncm:Identificacao" />
+                <xs:element name="IdentificacaoReceptor" type="sncm:Identificacao" />
+                <xs:sequence>
+                    <xs:element name="ListaEventoSNCM" type="sncm:ListaEventoSNCM" />
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attribute name="IdInstanciaEvento" type="xs:string" />
+            <xs:attribute name="ChaveNFe" type="xs:string" />
+            <xs:attribute name="Hash" type="xs:string" />
+            <xs:attribute name="Acao" use="required" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ListaEventoSNCM" type="sncm:ListaEventoSNCM"></xs:element>
+    <xs:element name="EventoSNCM" type="sncm:EventoSNCM"></xs:element>
+    <xs:complexType name="EventoRegistro">
+        <xs:sequence>
+            <xs:element name="Cabecalho" type="sncm:CabecalhoEvento" minOccurs="0" maxOccurs="1" />
+            <xs:element name="Identificacao" type="sncm:Identificacao" minOccurs="0" maxOccurs="1" />
+            <!-- No caso da importação, informar a transportadora-->
+            <xs:element name="IdentificacaoTransporte" type="sncm:Identificacao" minOccurs="0" maxOccurs="1" />
+            <xs:element name="ListaUnidade" type="sncm:ListaUnidade" minOccurs="0" maxOccurs="1" />
+            <xs:element name="ListaUnidadeAgregacao" type="sncm:ListaUnidadeAgregacao" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="CodTipoEvento" type="xs:string" use="required" />
+        <xs:attribute name="CodNot" type="xs:string" />
+        <xs:attribute name="Motivo" type="xs:string" />
+        <xs:attribute name="IdInstanciaEvento" type="xs:string" />
+        <xs:attribute name="IdInstanciaEventoSubstituida" type="xs:string" />
+        <xs:attribute name="Acao" type="xs:string" />
+        <xs:attribute name="Estado" type="xs:string" />
+    </xs:complexType>
+    <xs:element name="Retorno">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Mensagem" type="sncm:Mensagem" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="Erro">
+        <xs:sequence>
+            <xs:element name="CodigoErro" type="xs:string" />
+            <xs:element name="ConteudoErro" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="TipoErro" type="xs:string" />
+    </xs:complexType>
+    <!--
+    Tipos Complexos
+    -->
+    <xs:complexType name="Consulta">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="Parametro" type="sncm:ParametroConsulta" />
+            <!--
+            maior -Onde o valor é maior que a referencia
+            menor - Onde o valor é menor que a referencia
+            igual - Onde o valor é igual a referencia
+            menorigual - Onde o valor é menor ou igual a referencia.
+            maiorigual - Onde o valor é maior ou igual a referencia.
+            diferente - onde o valor é diferente da referencia.
+            existe - Onde existe a tag com esta referencia.
+            -->
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Identificacao">
+        <xs:sequence>
+            <xs:element name="Nome" type="xs:string" />
+            <xs:element name="TipoIdentificacao" type="xs:string" />
+            <xs:element name="ValorIdentificacao" type="xs:string" />
+            <xs:element name="Endereco" type="xs:string" />
+            <xs:element name="CEP" type="xs:string" />
+            <xs:element name="Cidade" type="xs:string" />
+            <xs:element name="UF" type="xs:string" />
+            <xs:element name="Pais" type="xs:string" />
+            <xs:element name="Latitude" minOccurs="0" maxOccurs="1" type="sncm:AltLong" />
+            <xs:element name="Longitude" minOccurs="0" maxOccurs="1" type="sncm:AltLong" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EventoSNCM">
+        <xs:choice>
+            <xs:element name="Registro" type="sncm:EventoRegistro" />
+            <xs:element name="Movimentacao" type="sncm:EventoMovimentacao" />
+        </xs:choice>
+        <xs:attribute name="IdInstanciaEvento" type="xs:string" />
+        <xs:attribute name="IdInstanciaEventoSubstituida" type="xs:string" />
+        <xs:attribute name="ChaveNFe" type="xs:string" />
+        <xs:attribute name="Hash" type="xs:string" use="required" />
+        <xs:attribute name="QUnPrev" type="xs:string" />
+        <xs:attribute name="Acao" type="xs:string" />
+        <xs:attribute name="Estado" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="ListaUnidade">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Unidade" type="sncm:Unidade" />
+        </xs:sequence>
+        <xs:attribute name="GDLote" type="sncm:TipoDLote" use="required" />
+        <xs:attribute name="GDtVal" type="xs:date" use="required" />
+        <xs:attribute name="GDtFab" type="xs:date" />
+        <xs:attribute name="GGTIN" type="sncm:TipoGTIN" />
+        <xs:attribute name="GRegMS" type="sncm:TipoRegMS" use="required" />
+        <xs:attribute name="Acao" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="ListaUnidadeAgregacao">
+        <xs:sequence>
+            <xs:element name="UnidadeAgregacao" type="sncm:UnidadeAgregacao" minOccurs="0" maxOccurs="unbounded" />
+            <!--xs:any namespace="##any" /-->
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Mensagem">
+        <xs:sequence>
+            <xs:element name="TipoMensagem" type="xs:string" />
+            <xs:element name="ConteudoMensagem" type="xs:string" />
+            <xs:sequence>
+                <xs:element name="erros" type="sncm:Erro" maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ParametroConsulta">
+        <xs:sequence>
+            <xs:element name="nome" type="xs:string" />
+            <xs:element name="operador" type="xs:string" />
+            <xs:element name="valor" type="xs:anyType" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ListaEventoSNCM">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="EventoSNCM" type="sncm:EventoSNCM" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Unidade">
+        <xs:sequence>
+            <xs:element name="RegMS" type="sncm:TipoRegMS" minOccurs="0" maxOccurs="1" />
+            <xs:element name="DLote" type="sncm:TipoDLote" minOccurs="0" maxOccurs="1" />
+            <xs:element name="NSerial" type="sncm:TipoSerial" minOccurs="1" maxOccurs="1" />
+            <xs:element name="DtVal" type="xs:date" minOccurs="0" maxOccurs="1" />
+            <xs:element name="DtFab" type="xs:date" minOccurs="0" maxOccurs="1" />
+            <xs:element name="GTIN" type="sncm:TipoGTIN" minOccurs="0" maxOccurs="1" />
+            <xs:element name="CodigoDm" type="xs:string" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Acao" type="xs:string" />
+        <xs:attribute name="Estado" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="UnidadeAgregacao">
+        <xs:choice>
+            <xs:element name="Unidade" type="sncm:Unidade" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="UnidadeAgregacao" type="sncm:UnidadeAgregacao" minOccurs="0" maxOccurs="unbounded" />
+            <!--xs:any namespace="##any"/-->
+        </xs:choice>
+        <xs:attribute name="CodigoVolume" type="xs:string" use="required" />
+        <xs:attribute name="IdInstanciaEvento" type="xs:string" />
+        <xs:attribute name="IdInstanciaEventoSubstituida" type="xs:string" />
+        <xs:attribute name="CodigoVolumePai" type="xs:string" />
+        <xs:attribute name="TipoVolume" type="xs:string" use="required" />
+        <xs:attribute name="Acao" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="EventoMovimentacao">
+        <xs:sequence>
+            <xs:element name="Cabecalho" type="sncm:CabecalhoEvento" minOccurs="0" maxOccurs="1" />
+            <xs:element name="IdentificacaoOrigem" type="sncm:Identificacao" minOccurs="0" maxOccurs="1" />
+            <xs:element name="IdentificacaoDestino" type="sncm:Identificacao" minOccurs="0" maxOccurs="1" />
+            <xs:element name="IdentificacaoTransporte" type="sncm:Identificacao" minOccurs="0" maxOccurs="1" />
+            <xs:element name="ListaVolume" type="sncm:ListaUnidadeAgregacao" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="CodTipoEvento" type="xs:string" />
+        <xs:attribute name="CodNot" type="xs:string" />
+        <xs:attribute name="IdInstanciaEvento" type="xs:string" />
+        <xs:attribute name="IdInstanciaEventoSubstituida" type="xs:string" />
+        <xs:attribute name="Acao" type="xs:string" />
+        <xs:attribute name="Estado" type="xs:string" />
+    </xs:complexType>
+    <xs:complexType name="CabecalhoEvento">
+        <xs:sequence>
+            <xs:element name="CodTipoEvento" type="xs:string" />
+            <xs:element name="DataRegistro" type="xs:dateTime" minOccurs="0" maxOccurs="1" />
+            <xs:element name="DataOcorrencia" type="xs:dateTime" minOccurs="1" maxOccurs="1" />
+        </xs:sequence>
+    </xs:complexType>
+    <!--
+    Tipos Simples
+    -->
+    <xs:simpleType name="AltLong">
+        <xs:restriction base="xs:decimal">
+            <xs:totalDigits value="10" />
+            <xs:fractionDigits value="6" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CodTipoEvento">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CodNot">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Acao">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Motivo">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="IdInstanciaEvento">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="12" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="chaveNFE">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{44}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Hash">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoSerial">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{13}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoGTIN">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{14}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoRegMS">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[1]{1}[0-9]{12}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoDLote">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="20" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CodigoVolume">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{40}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="IdInstanciaEventos">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="12" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CodigoVolumePai">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{40}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoVolume">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9]{1}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Nome">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="0" />
+            <xs:maxLength value="50" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TipoIdentificacao">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ValorIdentificacao">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Endereco">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CEP">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Cidade">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="UF">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Pais">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1" />
+            <xs:maxLength value="30" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
